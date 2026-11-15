@@ -1,0 +1,46 @@
+@model Order
+@{
+    ViewData["Title"] = $"Pedido #{Model.Id:D4}";
+    var current = Array.IndexOf(OrderStatuses.Flow, Model.Status);
+}
+<section class="panel">
+    <p class="eyebrow">Pedido confirmado</p>
+    <h1>Pedido #@Model.Id.ToString("D4")</h1>
+    <p class="meta">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm") · @Model.Items.FirstOrDefault()?.RestaurantName</p>
+    <ol class="timeline">
+        @for (var i = 0; i < OrderStatuses.Flow.Length; i++)
+        {
+            <li class="@(i <= current ? "on" : "")">@OrderStatuses.Flow[i]</li>
+        }
+    </ol>
+</section>
+<section class="layout-2">
+    <article class="panel">
+        <h2>Itens</h2>
+        <ul class="plain">
+            @foreach (var item in Model.Items)
+            {
+                <li>@item.Quantity× @item.ProductName <strong>@((item.UnitPrice * item.Quantity).ToString("C"))</strong></li>
+            }
+        </ul>
+        <p>Subtotal <strong>@Model.Subtotal.ToString("C")</strong></p>
+        <p>Taxa de entrega <strong>@Model.DeliveryFee.ToString("C")</strong></p>
+        <p class="total">Total <strong>@Model.Total.ToString("C")</strong></p>
+        <p>Pagamento: @Model.PaymentMethod</p>
+    </article>
+    <article class="panel">
+        <h2>Entrega</h2>
+        <p>@Model.CustomerName</p>
+        <p>@PhoneNumber.Format(Model.Phone)</p>
+        <p>@Model.Address</p>
+        @if (!string.IsNullOrWhiteSpace(Model.Complement))
+        {
+            <p>@Model.Complement</p>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Notes))
+        {
+            <p>Obs.: @Model.Notes</p>
+        }
+        <a class="btn secondary" asp-controller="Orders" asp-action="Buscar" asp-route-telefone="@Model.Phone">Ver meus pedidos</a>
+    </article>
+</section>

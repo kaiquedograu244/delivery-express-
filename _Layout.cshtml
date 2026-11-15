@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Delivery Express</title>
+    <link rel="icon" href="~/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" asp-controller="Home" asp-action="Index">Delivery <span>Express</span></a>
+        <nav>
+            <a asp-controller="Home" asp-action="Index">Início</a>
+            <a asp-controller="Orders" asp-action="Buscar">Meus pedidos</a>
+            <a asp-controller="Kitchen" asp-action="Index">Cozinha</a>
+            <a class="cart-link" asp-controller="Cart" asp-action="Index">Carrinho <strong>@Cart.Count</strong></a>
+        </nav>
+    </header>
+    <main>
+        @if (TempData["Ok"] is string ok)
+        {
+            <p class="flash ok">@ok</p>
+        }
+        @if (TempData["Erro"] is string erro)
+        {
+            <p class="flash err">@erro</p>
+        }
+        @RenderBody()
+    </main>
+    <footer>
+        <p>Delivery Express · pedidos salvos no MySQL · cozinha em tempo real neste computador.</p>
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

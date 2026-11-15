@@ -1,0 +1,30 @@
+@model OrderSearchViewModel
+@{
+    ViewData["Title"] = "Meus pedidos";
+}
+<h1>Meus pedidos</h1>
+<form class="search" method="get" action="/meus-pedidos">
+    <input type="tel" name="telefone" value="@Model.Phone" placeholder="Telefone usado no pedido" inputmode="tel" />
+    <button class="btn" type="submit">Buscar</button>
+</form>
+@if (Model.Searched && Model.Orders.Count == 0)
+{
+    <section class="panel empty">
+        <h2>Nenhum pedido para este telefone</h2>
+        <p>Confira o DDD e o número.</p>
+    </section>
+}
+else if (Model.Orders.Count > 0)
+{
+    <section class="stack">
+        @foreach (var order in Model.Orders)
+        {
+            <a class="card" asp-controller="Orders" asp-action="Confirmacao" asp-route-id="@order.Id">
+                <p class="category">@order.Status</p>
+                <h2>Pedido #@order.Id.ToString("D4")</h2>
+                <p>@order.Items.FirstOrDefault()?.RestaurantName</p>
+                <p class="meta">@order.CreatedAt.ToString("dd/MM/yyyy HH:mm") · @order.Total.ToString("C")</p>
+            </a>
+        }
+    </section>
+}

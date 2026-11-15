@@ -1,0 +1,29 @@
+Delivery Express
+================
+
+Site de delivery em C# (ASP.NET Core) com MySQL.
+
+Como abrir
+----------
+1. Dê dois cliques em abrir-site.bat
+2. O navegador abre http://localhost:5088
+3. Para encerrar o site, feche a janela preta.
+4. Para desligar o MySQL, dê dois cliques em parar.bat ou rode parar.ps1.
+
+O que dá para fazer
+-------------------
+- Buscar restaurantes e abrir o cardápio
+- Montar o carrinho (um restaurante por pedido)
+- Finalizar com nome, telefone, endereço e pagamento
+- Acompanhar o pedido e buscar pelo telefone
+- Entrar na Cozinha com o PIN cozinha123 e avançar o status
+
+MySQL neste computador
+----------------------
+Servidor: 127.0.0.1 porta 3306
+Banco: delivery_express
+Usuário: delivery
+Senha: delivery123
+
+O aplicativo cria o banco e o cardápio na primeira execução.
+Os arquivos do servidor ficam em %LOCALAPPDATA%\DeliveryExpress
