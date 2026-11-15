@@ -1,0 +1,40 @@
+@model Restaurant
+@{
+    ViewData["Title"] = Model.Name;
+}
+<p><a class="back" asp-controller="Home" asp-action="Index">← Restaurantes</a></p>
+<header class="panel restaurant-head">
+    <span class="emoji" aria-hidden="true">@CategoryGlyph.For(Model.Category)</span>
+    <div>
+        <p class="category">@Model.Category</p>
+        <h1>@Model.Name</h1>
+        <p>@Model.Description</p>
+        <p class="meta">★ @Model.Rating.ToString("0.0") · @Model.DeliveryMinutes min · taxa @Model.DeliveryFee.ToString("C")</p>
+    </div>
+</header>
+@foreach (var group in Model.Products.GroupBy(product => product.Category))
+{
+    <section class="panel menu-block">
+        <h2>@group.Key</h2>
+        @foreach (var product in group)
+        {
+            <article class="product">
+                <div>
+                    <h3>@product.Name</h3>
+                    <p>@product.Description</p>
+                    <strong>@product.Price.ToString("C")</strong>
+                </div>
+                <form method="post" asp-controller="Cart" asp-action="Adicionar">
+                    <input type="hidden" name="productId" value="@product.Id" />
+                    <input type="hidden" name="restaurantId" value="@Model.Id" />
+                    <div class="qty">
+                        <button type="button" data-step="-1" aria-label="Diminuir">−</button>
+                        <input type="number" name="quantity" value="1" min="1" max="20" aria-label="Quantidade" />
+                        <button type="button" data-step="1" aria-label="Aumentar">+</button>
+                    </div>
+                    <button class="btn" type="submit">Adicionar</button>
+                </form>
+            </article>
+        }
+    </section>
+}

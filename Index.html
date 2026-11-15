@@ -1,0 +1,70 @@
+@model KitchenViewModel
+@{
+    ViewData["Title"] = "Cozinha";
+}
+@if (!Model.Authorized)
+{
+    <section class="panel narrow">
+        <h1>Cozinha</h1>
+        <p>Entre com o PIN para ver os pedidos e avançar o status.</p>
+        <form method="post" asp-controller="Kitchen" asp-action="Entrar">
+            <div class="field">
+                <label for="pin">PIN</label>
+                <input id="pin" name="pin" type="password" autocomplete="current-password" />
+            </div>
+            <button class="btn" type="submit">Entrar</button>
+        </form>
+    </section>
+}
+else
+{
+    <div class="split-title">
+        <h1>Pedidos da cozinha</h1>
+        <form method="post" asp-controller="Kitchen" asp-action="Sair">
+            <button class="btn secondary" type="submit">Sair</button>
+        </form>
+    </div>
+    @if (Model.Orders.Count == 0)
+    {
+        <section class="panel empty">
+            <h2>Nenhum pedido ainda</h2>
+            <p>Quando alguém finalizar um pedido, ele aparece aqui.</p>
+        </section>
+    }
+    else
+    {
+        <section class="stack">
+            @foreach (var order in Model.Orders)
+            {
+                <article class="panel">
+                    <div class="split-title">
+                        <div>
+                            <p class="category">@order.Status</p>
+                            <h2>Pedido #@order.Id.ToString("D4")</h2>
+                        </div>
+                        <p class="meta">@order.CreatedAt.ToString("HH:mm")</p>
+                    </div>
+                    <p><strong>@order.CustomerName</strong> · @PhoneNumber.Format(order.Phone)</p>
+                    <p>@order.Address @order.Complement</p>
+                    <p>Pagamento: @order.PaymentMethod · @order.Total.ToString("C")</p>
+                    @if (!string.IsNullOrWhiteSpace(order.Notes))
+                    {
+                        <p>Obs.: @order.Notes</p>
+                    }
+                    <ul class="plain">
+                        @foreach (var item in order.Items)
+                        {
+                            <li>@item.Quantity× @item.ProductName <span class="meta">@item.RestaurantName</span></li>
+                        }
+                    </ul>
+                    @if (!OrderStatuses.IsLast(order.Status))
+                    {
+                        <form method="post" asp-controller="Kitchen" asp-action="Avancar" asp-route-id="@order.Id">
+                            <button class="btn" type="submit">Avançar para @OrderStatuses.Next(order.Status)</button>
+                        </form>
+                    }
+                </article>
+            }
+        </section>
+    }
+}
